@@ -1,0 +1,13 @@
+{
+  "hello": "Hi — the AI assistant is under training. I can reply to a small set of predefined prompts. Try: Hello, Who is Jesus, What is the Bible, Prayer, John 3:16.",
+  "who is jesus": "Jesus is the central figure of Christianity. He is described in the Bible as the Son of God and Savior. (Training stub)",
+  "what is the bible": "The Bible is the holy scripture of Christians, consisting of the Old and New Testaments. (Training stub)",
+  "prayer": "A short prayer: \"Lord, guide us with your wisdom and peace.\" (Training stub)",
+  "నమస్కారం": "నమస్కారం — AI సహాయకుడు ప్రస్తుతం శిక్షణలో ఉంది. దయచేసి ఈ నిర్వచిత ప్రశ్నలలో ఒకదాన్ని ప్రయత్నించండి: Hello, Who is Jesus, What is the Bible, Prayer, John 3:16.",
+  "who is jesus in telugu": "యేసు క్రీస్తు గురించి: బైబిల్ ప్రకారం, యేసు దేవుని కుమారుడు మరియు మనకొరకు రక్షకుడు. (శిక్షణ స్టబ్)",
+  "what is the bible in telugu": "బైబిల్ అంటే క్రైస్తవుల పవిత్ర గ్రంథం, అది పూర్వ ఒప్పందం మరియు నూతన ఒప్పందంతో కూడినది. (శిక్షణ స్టబ్)",
+  "john 3 16": "యోహాను 3:16 (సారాంశం): దేవుని ప్రేమ వల్ల మనకు ఆశీర్వాదము కలుగుతుంది; ఆయనను నమ్మిన వారికి జీవితం లభిస్తుంది. (శిక్షణ స్టబ్)",
+  "john316": "యోహాను 3:16 (సారాంశం): దేవుని ప్రేమ వల్ల మనకు ఆశీర్వాదము కలుగుతుంది; ఆయనను నమ్మిన వారు జీవితం పొందును. (శిక్షణ స్టబ్)",
+  "యోహాను 3 16": "యోహాను 3:16 (సారాంశం): దేవుని ప్రేమ వల్ల మనకు ఆశీర్వాదము కలుగుతుంది; ఆయనను నమ్మిన వారికి జీవితం లభిస్తుంది. (శిక్షణ స్టబ్)",
+  "యోహాను316": "యోహాను 3:16 (సారాంశం): దేవుని ప్రేమ వల్ల మనకు ఆశీర్వాదము కలుగుతుంది; ఆయనను నమ్మిన వారు జీవితం పొందును. (శిక్షణ స్టబ్)"
+}

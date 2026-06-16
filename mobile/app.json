@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "Bible AI Telugu",
+    "slug": "bible-ai-telugu",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "bibleaitelugu",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": [
+      "data/*",
+      "assets/audio/**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bibleaitelugu.app"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/b7f01295-3750-4e88-bb48-9d5883aefa63",
+      "channel": "production"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "android": {
+      "package": "com.bibleaitelugu.app",
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "backgroundColor": "#090d16",
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
+      },
+      "permissions": [
+        "INTERNET"
+      ],
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b7f01295-3750-4e88-bb48-9d5883aefa63"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#090d16",
+          "image": "./assets/images/splash-icon.png",
+          "resizeMode": "contain",
+          "imageWidth": 120
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

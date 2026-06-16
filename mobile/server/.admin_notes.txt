@@ -1,0 +1,7 @@
+Admin endpoints available:
+- GET /admin/responses  (header x-admin-secret or ?admin_secret=)
+- POST /admin/responses {key, text}
+- DELETE /admin/responses {key}
+- POST /admin/reload
+
+Set ADMIN_SECRET or EXPO_ADMIN_SECRET in .env.local to protect these endpoints. Default is 'dev-secret' (change for production).
