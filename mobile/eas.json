@@ -9,7 +9,7 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://bible-ai-backend.onrender.com"
+        "EXPO_PUBLIC_API_URL": "https://bibleai-i4vr.onrender.com"
       }
     },
     "preview": {
@@ -18,7 +18,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://bible-ai-backend.onrender.com"
+        "EXPO_PUBLIC_API_URL": "https://bibleai-i4vr.onrender.com"
       }
     }
   }
