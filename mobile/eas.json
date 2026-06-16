@@ -5,7 +5,6 @@
   "build": {
     "production": {
       "releaseChannel": "production",
-      "npmClient": "npm",
       "android": {
         "buildType": "app-bundle"
       },
@@ -15,7 +14,6 @@
     },
     "preview": {
       "distribution": "internal",
-      "npmClient": "npm",
       "android": {
         "buildType": "apk"
       },

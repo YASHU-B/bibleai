@@ -41,3 +41,6 @@ example
 # generated native folders
 /ios
 /android
+
+# ignore lockfile so EAS runs npm install instead of npm ci
+package-lock.json
