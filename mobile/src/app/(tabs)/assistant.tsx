@@ -252,43 +252,15 @@ export default function MobileAssistant() {
           </TouchableOpacity>
         </View>
 
-        {/* Offline Mode Toggle Switch */}
-        <TouchableOpacity 
-          onPress={() => {
-            if (isOnline) {
-              setIsForceOffline(!isForceOffline);
-            }
-          }}
-          disabled={!isOnline}
-          style={[
-            styles.offlineToggleBtn, 
-            { 
-              backgroundColor: isEffectiveOffline ? theme.accentBg : theme.backgroundElement,
-              borderColor: isEffectiveOffline ? theme.accent : theme.border,
-            }
-          ]}
-        >
-          <Ionicons 
-            name={isEffectiveOffline ? "cloud-offline" : "cloud-done-outline"} 
-            size={14} 
-            color={isEffectiveOffline ? theme.accent : theme.textSecondary} 
-          />
-          <Text style={[styles.offlineToggleText, { color: isEffectiveOffline ? theme.accent : theme.textSecondary }]}>
-            {language === 'te' ? 'ఆఫ్‌లైన్ మోడ్' : 'Offline Mode'}
-          </Text>
-          <View style={[
-            styles.switchTrack,
-            { backgroundColor: isEffectiveOffline ? theme.accent : theme.border }
-          ]}>
-            <View style={[
-              styles.switchThumb,
-              { 
-                backgroundColor: '#fff',
-                transform: [{ translateX: isEffectiveOffline ? 12 : 0 }]
-              }
-            ]} />
+        {/* Offline AI Assistant Indicator (shown only when offline) */}
+        {!isOnline && (
+          <View style={[styles.offlineIndicator, { backgroundColor: theme.accentBg, borderColor: theme.accent }]}>
+            <Ionicons name="cloud-offline" size={14} color={theme.accent} />
+            <Text style={[styles.offlineIndicatorText, { color: theme.accent }]}>
+              {language === 'te' ? 'ఆఫ్‌లైన్ AI సహాయకుడు' : 'Offline AI Assistant'}
+            </Text>
           </View>
-        </TouchableOpacity>
+        )}
       </View>
 
       {/* Offline banner indicating predefined prompts only */}
@@ -466,6 +438,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   offlineToggleText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  offlineIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  offlineIndicatorText: {
     fontSize: 10,
     fontWeight: 'bold',
   },
