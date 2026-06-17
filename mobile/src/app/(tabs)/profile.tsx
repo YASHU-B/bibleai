@@ -9,50 +9,13 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/use-theme';
-import { useAuth } from '@/lib/auth-context';
-import { useRouter } from 'expo-router';
 import { Bookmark, loadBookmarks, removeBookmark } from '@/lib/bookmarkStore';
 import { languagePreferenceService } from '@/lib/languagePreferenceService';
 
 export default function MobileProfile() {
   const theme = useTheme();
-  const { user, signOut } = useAuth();
-  const router = useRouter();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [lang, setLang] = useState<'te' | 'en'>('te');
-
-  const userName = user?.email?.split('@')[0] ?? 'Guest User';
-  const userEmail = user?.email ?? 'Offline Mode';
-  const isLoggedIn = !!user;
-
-  const handleSignOut = async () => {
-    Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
-      [
-        { text: 'Cancel', onPress: () => {} },
-        {
-          text: 'Sign Out',
-          onPress: async () => {
-            try {
-              const ok = await signOut();
-              console.debug('Profile: signOut returned', ok);
-              if (ok === false) {
-                Alert.alert('Error', 'Sign out failed. Please try again.');
-                return;
-              }
-              // Give file system time to write logout marker (increased to 1 second)
-              await new Promise(resolve => setTimeout(resolve, 1000));
-              router.replace('/(tabs)');
-            } catch (err) {
-              Alert.alert('Error', 'Failed to sign out');
-            }
-          },
-          style: 'destructive',
-        },
-      ]
-    );
-  };
 
   const handleToggleLanguage = async () => {
     const nextLang = lang === 'te' ? 'en' : 'te';
@@ -77,7 +40,7 @@ export default function MobileProfile() {
 
     loadSavedBookmarks();
     loadLang();
-  }, [user?.email]);
+  }, []);
 
   const handleRemoveBookmark = async (bookmarkId: string) => {
     const updatedBookmarks = await removeBookmark(bookmarkId);
@@ -87,46 +50,14 @@ export default function MobileProfile() {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]} contentContainerStyle={styles.content}>
       
-      {/* 1. Profile Bio Header — only shown when logged in */}
-      {isLoggedIn && (
-        <View style={[styles.profileCard, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
-          <View style={styles.avatarRow}>
-            <View style={[styles.avatar, { backgroundColor: theme.accent }]}>
-              <Text style={[styles.avatarText, { color: theme.background }]}>
-                {userName.substring(0, 2).toUpperCase()}
-              </Text>
-            </View>
-            <View style={styles.bio}>
-              <Text style={[styles.name, { color: theme.text }]}>{userName}</Text>
-              <Text style={[styles.email, { color: theme.textSecondary }]}>{userEmail}</Text>
-              <View style={[styles.badge, { backgroundColor: theme.backgroundSelected }]}>
-                <Text style={[styles.badgeText, { color: theme.textSecondary }]}>Bible AI User</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      )}
-
-      {/* Quick Access Buttons */}
-      <View style={styles.quickAccessGrid}>
-        <TouchableOpacity style={[styles.quickButton, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]} onPress={() => router.push('/(tabs)/plans')}>
-          <Ionicons name="list" size={24} color={theme.accent} />
-          <Text style={[styles.quickButtonText, { color: theme.text }]}>Reading Plans</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.quickButton, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]} onPress={() => router.push('/(tabs)/settings')}>
-          <Ionicons name="settings" size={24} color={theme.accent} />
-          <Text style={[styles.quickButtonText, { color: theme.text }]}>Settings</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* 2. Saved Bookmarks list */}
+      {/* Saved Bookmarks list */}
       <View style={[styles.section, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
         <Text style={[styles.sectionTitle, { color: theme.text, borderBottomColor: theme.border }]}>
           <Ionicons name="bookmark" size={16} color={theme.accent} /> సేవ్‌ చేసిన వాక్యాలు (Saved Bookmarks)
         </Text>
         
         {bookmarks.length > 0 ? (
-            bookmarks.map((bookmark, idx) => (
+            bookmarks.map((bookmark) => (
               <View key={bookmark.id} style={[styles.bookmarkRow, { backgroundColor: theme.background, borderColor: theme.border }]}> 
                 <View style={styles.bookmarkRowContent}>
                   <Text style={[styles.bookmarkText, { color: theme.textSecondary }]} numberOfLines={3}>{bookmark.content}</Text>
@@ -145,9 +76,7 @@ export default function MobileProfile() {
           )}
       </View>
 
-      {/* Prayer requests removed */}
-
-      {/* 4. Settings panel */}
+      {/* Settings panel */}
       <View style={[styles.section, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
         <Text style={[styles.sectionTitle, { color: theme.text, borderBottomColor: theme.border }]}>
           <Ionicons name="settings" size={16} color="#3B82F6" /> యాప్ సెట్టింగ్స్ (App Settings)
@@ -155,7 +84,7 @@ export default function MobileProfile() {
         
         {/* Language setting toggle option */}
         <TouchableOpacity 
-          style={styles.settingItem}
+          style={[styles.settingItem, { borderBottomColor: 'transparent' }]}
           onPress={handleToggleLanguage}
         >
           <View style={styles.settingLeft}>
@@ -169,19 +98,6 @@ export default function MobileProfile() {
             <Ionicons name="chevron-forward" size={14} color={theme.textSecondary} />
           </View>
         </TouchableOpacity>
-
-        {isLoggedIn && (
-          <TouchableOpacity 
-            style={[styles.settingItem, { borderBottomColor: 'transparent' }]}
-            onPress={handleSignOut}
-          >
-            <View style={styles.settingLeft}>
-              <Ionicons name="log-out-outline" size={20} color="#EF4444" />
-              <Text style={[styles.settingLabel, { color: '#EF4444' }]}>Sign Out</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={14} color={theme.textSecondary} />
-          </TouchableOpacity>
-        )}
       </View>
 
       {/* 4. Footer */}

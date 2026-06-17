@@ -13,6 +13,14 @@ const expo = {
   },
 };
 
-module.exports = {
-  expo,
+module.exports = ({ config }) => {
+  return {
+    ...config,
+    ...appJson.expo,
+    extra: {
+      ...(appJson.expo.extra || {}),
+      ...config.extra,
+      ...process.env,
+    },
+  };
 };

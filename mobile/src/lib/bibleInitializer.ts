@@ -109,16 +109,12 @@ export async function initializeOfflineBible(
   onProgress?: (progress: BibleLoadProgress) => void
 ): Promise<void> {
   try {
-    // Mark initialization started so UI can show progress
     try {
       await AsyncStorage.setItem(BIBLE_INIT_STARTED_KEY, 'true');
-    } catch (e) {
-      // non-fatal
-    }
-    // Check if already initialized
+    } catch (e) {}
+
     const alreadyInitialized = await isBibleInitialized();
     if (alreadyInitialized) {
-      console.log('Offline Bible already initialized');
       onProgress?.({
         booksLoaded: 66,
         chaptersLoaded: 1189,
@@ -128,82 +124,29 @@ export async function initializeOfflineBible(
       return;
     }
 
-    console.log('Starting Bible offline initialization...');
+    // Since we bundle the 17MB bibleData.generated.ts directly, we do not need to 
+    // write 1,189 separate JSON files to disk, which freezes the app.
+    // We just report immediate completion.
+    onProgress?.({
+      booksLoaded: 66,
+      chaptersLoaded: 1189,
+      totalChapters: 1189,
+      isComplete: true,
+    });
 
-    // Load CSV files
-    const { booksCSV, versesCSV } = await loadCSVFiles();
-
-    // Parse books and verses
-    const books = await parseBooksCSV(booksCSV);
-    const versesMap = await parseVersesCSV(versesCSV);
-
-    // Calculate chapter counts
-    const booksWithChapters = calculateChapterCounts(books, versesMap);
-
-    const totalChapters = versesMap.size;
-    let chaptersLoaded = 0;
-    const batchSize = 50;
-
-    console.log(`Loading ${totalChapters} chapters into offline cache in batches...`);
-
-    const mapEntries = Array.from(versesMap.entries());
-    for (let i = 0; i < mapEntries.length; i += batchSize) {
-      const chunk = mapEntries.slice(i, i + batchSize);
-      
-      await Promise.all(
-        chunk.map(async ([key, verses]) => {
-          if (verses.length === 0) return;
-          const [bookId, chapter] = key.split('-').map(Number);
-          try {
-            await saveOfflineBibleChapter(bookId, chapter, verses);
-          } catch (error) {
-            console.warn(`Failed to cache chapter ${bookId}:${chapter}:`, error);
-          }
-        })
-      );
-
-      chaptersLoaded += chunk.length;
-
-      onProgress?.({
-        booksLoaded: books.length,
-        chaptersLoaded: Math.min(chaptersLoaded, totalChapters),
-        totalChapters,
-        isComplete: false,
-      });
-
-      // Yield to main thread briefly
-      await new Promise(resolve => setTimeout(resolve, 5));
-    }
-
-    // Mark initialization as complete
     await AsyncStorage.multiSet([
       [BIBLE_INITIALIZED_KEY, 'true'],
       [BIBLE_VERSION_KEY, CURRENT_BIBLE_VERSION],
     ]);
 
-    // Clear initializing flag
     try {
       await AsyncStorage.removeItem(BIBLE_INIT_STARTED_KEY);
-    } catch (e) {
-      // ignore
-    }
-
-    console.log(`✅ Bible offline initialization complete: ${chaptersLoaded}/${totalChapters} chapters cached`);
-
-    onProgress?.({
-      booksLoaded: books.length,
-      chaptersLoaded,
-      totalChapters,
-      isComplete: true,
-    });
+    } catch (e) {}
   } catch (error) {
     console.error('Failed to initialize offline Bible:', error);
-    // Ensure initializing flag is cleared on failure
     try {
       await AsyncStorage.removeItem(BIBLE_INIT_STARTED_KEY);
-    } catch (e) {
-      // ignore
-    }
+    } catch (e) {}
     throw error;
   }
 }

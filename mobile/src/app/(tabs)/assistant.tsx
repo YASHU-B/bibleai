@@ -15,7 +15,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
-import { useAuth } from '@/lib/auth-context';
 import { getAssistantReply } from '@/lib/localAssistant';
 import { addBookmark, loadBookmarks, Bookmark } from '@/lib/bookmarkStore';
 import { createConversation, saveMessage, Conversation } from '@/lib/chatHistoryStore';
@@ -31,7 +30,6 @@ export default function MobileAssistant() {
   const params = useLocalSearchParams();
   const router = useRouter();
   const searchPrompt = params.prompt as string;
-  const { user, isSignedIn } = useAuth();
   const { isOnline } = useNetworkStatus();
 
   const [language, setLanguage] = useState<'te' | 'en'>('te');
@@ -97,11 +95,7 @@ export default function MobileAssistant() {
       }
       streamReply(reply);
       
-      // Save messages to database
-      if (conversation && user?.email) {
-        await saveMessage(conversation.id, user.email, 'user', textToSend);
-        await saveMessage(conversation.id, user.email, 'model', reply);
-      }
+      // Save messages locally (remote database storage is disabled as auth is removed)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : (language === 'en' 
         ? 'AI question error. Please try again later.'
@@ -161,30 +155,9 @@ export default function MobileAssistant() {
     };
 
     loadSaved();
-  }, [user?.email]);
+  }, []);
 
-  // Initialize auth token and create conversation when user signs in
-  useEffect(() => {
-    const initializeAuth = async () => {
-      if (isSignedIn && user?.email) {
-        // Use email + signedInAt as a simple auth token for dev
-        // In production, get a real JWT from Firebase
-        const token = btoa(`${user.email}:${user.signedInAt}`);
-        setAuthToken(token);
-        
-        // Create or load conversation for this session
-        const conv = await createConversation(user.email, user.email, language);
-        if (conv) {
-          setConversation(conv);
-        }
-      } else {
-        setAuthToken("");
-        setConversation(null);
-      }
-    };
-
-    initializeAuth();
-  }, [isSignedIn, user?.email, language]);
+  // Remote token initialization removed because auth is disabled
 
   useEffect(() => {
     return () => {

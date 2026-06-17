@@ -1,4 +1,4 @@
-import { Verse, Book } from './bibleData';
+import { Verse, Book, verses } from './bibleData';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Platform } from 'react-native';
 
@@ -87,7 +87,10 @@ export async function loadOfflineBibleChapter(
     }
 
     // Fallback to bundled verses
-    return bundledVerses;
+    if (bundledVerses && bundledVerses.length > 0) {
+      return bundledVerses;
+    }
+    return verses.filter(v => v.book_id === bookId && v.chapter === chapter);
   } catch (error) {
     console.warn('Error loading offline Bible chapter:', error);
     return bundledVerses;

@@ -42,5 +42,5 @@ example
 /ios
 /android
 
-# ignore lockfile so EAS runs npm install instead of npm ci
-package-lock.json
+# local npm cache
+.npm-cache/

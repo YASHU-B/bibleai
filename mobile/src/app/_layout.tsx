@@ -4,7 +4,6 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Updates from 'expo-updates';
-import { AuthProvider } from '@/lib/auth-context';
 import { ReadingPlanProvider } from '@/lib/readingPlanContext';
 import { initializeOfflineBible, isBibleInitialized } from '@/lib/bibleInitializer';
 
@@ -97,15 +96,15 @@ export default function RootLayout() {
           style={styles.logo}
           resizeMode="cover"
         />
-        <Text style={styles.titleTe}>బైబిల్ AI</Text>
-        <Text style={styles.titleEn}>Bible AI Telugu</Text>
+        <Text style={styles.titleTe}>Bible AI</Text>
+
 
         <View style={styles.progressBox}>
           <Text style={styles.statusText}>
-            {pct < 5 ? "డేటాబేస్ సిద్ధమవుతోంది..." : "ఆఫ్‌లైన్ బైబిల్‌ను లోడ్ చేస్తోంది..."}
+            {pct < 5 ? "Initializing Bible Database..." : "Loading offline Bible..."}
           </Text>
           <Text style={styles.subStatusText}>
-            {progress ? `${progress.loaded} / ${progress.total} అధ్యాయాలు లోడ్ అయ్యాయి` : "ప్రారంభించబడుతోంది..."}
+            {progress ? `${progress.loaded} / ${progress.total} chapters loaded` : "Initializing..."}
           </Text>
 
           <View style={styles.progressBarBg}>
@@ -120,14 +119,12 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <ReadingPlanProvider>
-        <StatusBar style="dark" />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-        </Stack>
-      </ReadingPlanProvider>
-    </AuthProvider>
+    <ReadingPlanProvider>
+      <StatusBar style="dark" />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+    </ReadingPlanProvider>
   );
 }
 

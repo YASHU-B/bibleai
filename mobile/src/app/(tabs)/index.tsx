@@ -116,48 +116,56 @@ export default function MobileHome() {
   const [currentVerseIndex] = useState(getVerseIndexForToday);
   const [verseLang, setVerseLang] = useState<'te' | 'en'>('te');
   const t = TRANSLATIONS[lang];
+  const isInitializingRef = React.useRef(false);
 
   useEffect(() => {
     const initLanguage = async () => {
-      const savedLang = await languagePreferenceService.getLanguage();
-      setLang(savedLang);
-      setVerseLang(savedLang); // Sync initial verse language with user preference
+      if (isInitializingRef.current) return;
+      isInitializingRef.current = true;
+      
+      try {
+        const savedLang = await languagePreferenceService.getLanguage();
+        setLang(savedLang);
+        setVerseLang(savedLang); // Sync initial verse language with user preference
 
-      const isFirstLaunch = await languagePreferenceService.checkFirstTimeLaunch();
-      if (isFirstLaunch) {
-        const handleFirstLaunchSetup = async (selectedLang: 'te' | 'en') => {
-          await languagePreferenceService.setLanguage(selectedLang);
-          setLang(selectedLang);
-          setVerseLang(selectedLang);
-          
-          // Request notification permission and trigger welcome notification
-          setTimeout(async () => {
-            try {
-              const granted = await notificationService.requestPermissions();
-              if (granted) {
-                await notificationService.triggerWelcomeNotification();
+        const isFirstLaunch = await languagePreferenceService.checkFirstTimeLaunch();
+        if (isFirstLaunch) {
+          const handleFirstLaunchSetup = async (selectedLang: 'te' | 'en') => {
+            await languagePreferenceService.setLanguage(selectedLang);
+            setLang(selectedLang);
+            setVerseLang(selectedLang);
+            
+            // Request notification permission and trigger welcome notification
+            setTimeout(async () => {
+              try {
+                const granted = await notificationService.requestPermissions();
+                if (granted) {
+                  await notificationService.triggerWelcomeNotification();
+                }
+              } catch (err) {
+                console.warn('Welcome notification setup failed:', err);
               }
-            } catch (err) {
-              console.warn('Welcome notification setup failed:', err);
-            }
-          }, 600);
-        };
+            }, 600);
+          };
 
-        Alert.alert(
-          'భాషను ఎంచుకోండి / Select Language',
-          'యాప్ కోసం మీ భాషను ఎంచుకోండి:\nChoose your app language:',
-          [
-            {
-              text: 'తెలుగు (Telugu)',
-              onPress: () => handleFirstLaunchSetup('te'),
-            },
-            {
-              text: 'English',
-              onPress: () => handleFirstLaunchSetup('en'),
-            },
-          ],
-          { cancelable: false }
-        );
+          Alert.alert(
+            'భాషను ఎంచుకోండి / Select Language',
+            'యాప్ కోసం మీ భాషను ఎంచుకోండి:\nChoose your app language:',
+            [
+              {
+                text: 'తెలుగు (Telugu)',
+                onPress: () => handleFirstLaunchSetup('te'),
+              },
+              {
+                text: 'English',
+                onPress: () => handleFirstLaunchSetup('en'),
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+      } finally {
+        isInitializingRef.current = false;
       }
     };
 

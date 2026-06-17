@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "Bible AI Telugu",
+    "name": "Bible Ai",
     "slug": "bible-ai-telugu",
+    "owner": "yashu03",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "bibleaitelugu",
+    "scheme": "bibleai",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": [
       "data/*",
@@ -13,21 +14,19 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bibleaitelugu.app"
+      "bundleIdentifier": "com.bibleai.app"
     },
     "updates": {
-      "url": "https://u.expo.dev/b7f01295-3750-4e88-bb48-9d5883aefa63",
-      "channel": "production"
+      "url": "https://u.expo.dev/b7f01295-3750-4e88-bb48-9d5883aefa63"
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "android": {
-      "package": "com.bibleaitelugu.app",
-      "versionCode": 2,
+      "package": "com.bibleai.app",
       "adaptiveIcon": {
         "backgroundColor": "#090d16",
-        "foregroundImage": "./assets/images/android-icon-foreground.png"
+        "foregroundImage": "./assets/images/icon.png"
       },
       "permissions": [
         "INTERNET"

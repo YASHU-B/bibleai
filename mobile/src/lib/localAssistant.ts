@@ -195,41 +195,12 @@ function getLanguagePrefix(language: Language) {
   return language === 'en' ? 'Please answer in English.' : 'Please answer in Telugu.';
 }
 
-async function callGoogleGenerateContent(model: string, apiKey: string, text: string): Promise<string | null> {
-  if (!apiKey) return null;
-  try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-    const body = { contents: [{ parts: [{ text }] }] };
-    const resp = await fetch(url + `?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey },
-      body: JSON.stringify(body),
-    });
-    const json = await resp.json().catch(() => null);
-    if (!resp.ok) {
-      console.warn('Google generateContent failed', json);
-      return null;
-    }
-    const candidates = json && (json.candidates || []);
-    if (Array.isArray(candidates) && candidates.length > 0) {
-      const c = candidates[0];
-      const textOut = c && c.content && c.content.parts && c.content.parts[0] && c.content.parts[0].text;
-      return textOut || c.output || null;
-    }
-    return json.output || json.result || null;
-  } catch (e) {
-    console.warn('callGoogleGenerateContent error', e);
-    return null;
-  }
-}
-
 export async function getAssistantReply(input: string, history: AssistantMessage[], language: Language = 'te', authToken?: string): Promise<string> {
   let apiUrl = process.env.EXPO_PUBLIC_API_URL?.trim() || '';
   if (Platform.OS === 'android' && (apiUrl.includes('localhost') || apiUrl.includes('127.0.0.1'))) {
     apiUrl = apiUrl.replace('localhost', '10.0.2.2').replace('127.0.0.1', '10.0.2.2');
   }
   const useLocalStub = (process.env.EXPO_LOCAL_AI_STUB || process.env.USE_LOCAL_AI_STUB) === 'true';
-  const promptInput = `${getLanguagePrefix(language)}\n\n${input}`;
   const generativePrompt = `${getLanguagePrefix(language)}\nPlease answer the question directly and concisely in ${language === 'en' ? 'English' : 'Telugu'}. Do not only return Bible passages — explain the idea first, and include citations only if explicitly requested.\n\n${input}`;
 
   // Handle exact predefined prompts locally first so language selection is respected.
@@ -284,25 +255,11 @@ export async function getAssistantReply(input: string, history: AssistantMessage
       if (message.includes('Unauthorized') || message.includes('quota') || message.includes('అనుమతి')) {
         throw err;
       }
-      // For other errors, fall through to direct Gemini API call or local fallback
+      // For other errors, fall through to local fallback
     }
   }
 
-  // Direct client-side Gemini API fallback using the API key if provided
-  const directApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY?.trim();
-  const directModel = process.env.EXPO_PUBLIC_GOOGLE_AI_MODEL?.trim() || 'gemini-1.5-flash';
-  if (directApiKey) {
-    try {
-      const directResponse = await callGoogleGenerateContent(directModel, directApiKey, generativePrompt);
-      if (directResponse) {
-        return directResponse;
-      }
-    } catch (directErr) {
-      console.warn('Direct Gemini API call failed:', directErr);
-    }
-  }
-
-  // If proxy and direct Gemini failed, fall back to local assistant responses.
+  // If proxy failed, fall back to local assistant responses.
   const local = await getLocalAssistantFallback(input, language);
   if (local) return local;
 

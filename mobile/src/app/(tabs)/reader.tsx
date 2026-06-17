@@ -14,7 +14,6 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import { books, verses, Book, Verse } from '@/lib/bibleData';
 import { useTheme } from '@/hooks/use-theme';
-import { useAuth } from '@/lib/auth-context';
 import { useReadingPlan } from '@/lib/readingPlanContext';
 import { addBookmark } from '@/lib/bookmarkStore';
 import { verseShareService, BilingualShareVerseData } from '@/lib/verseShareService';
@@ -65,7 +64,6 @@ function SearchBar({ value, onChangeText, theme }: { value: string; onChangeText
 
 export default function MobileReader() {
   const theme = useTheme();
-  const { user } = useAuth();
   const { activePlan, markDayComplete, getPlanDetails } = useReadingPlan();
   const { isOnline } = useNetworkStatus();
   const bibleInitStatus = useBibleInitStatus();
@@ -155,7 +153,7 @@ export default function MobileReader() {
 
   useEffect(() => {
     const loadResumePosition = async () => {
-      const emailKey = user?.email || 'guest';
+      const emailKey = 'guest';
       try {
         const position = await loadReaderPosition(emailKey);
         if (!position) {
@@ -191,7 +189,7 @@ export default function MobileReader() {
     };
 
     loadResumePosition();
-  }, [user?.email]);
+  }, []);
 
   useEffect(() => {
     const savePosition = async () => {
@@ -199,7 +197,7 @@ export default function MobileReader() {
       // to avoid overwriting the saved position the moment it's loaded.
       if (!resumeLoaded) return;
       if (!userNavigatedRef.current) return;
-      const emailKey = user?.email || 'guest';
+      const emailKey = 'guest';
 
       try {
         await saveReaderPosition(emailKey, {
@@ -214,7 +212,7 @@ export default function MobileReader() {
     };
 
     savePosition();
-  }, [user?.email, selectedBook.id, selectedChapter, activeVerse?.verse, resumeLoaded]);
+  }, [selectedBook.id, selectedChapter, activeVerse?.verse, resumeLoaded]);
 
   const displayedVerses = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
