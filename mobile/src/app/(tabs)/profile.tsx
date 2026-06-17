@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -8,6 +8,7 @@ import {
   Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
 import { Bookmark, loadBookmarks, removeBookmark } from '@/lib/bookmarkStore';
 import { languagePreferenceService } from '@/lib/languagePreferenceService';
@@ -27,20 +28,30 @@ export default function MobileProfile() {
     );
   };
 
-  useEffect(() => {
-    const loadSavedBookmarks = async () => {
-      const storedBookmarks = await loadBookmarks();
-      setBookmarks(storedBookmarks);
-    };
+  const navigation = useNavigation();
 
+  const refreshBookmarks = useCallback(async () => {
+    const storedBookmarks = await loadBookmarks();
+    setBookmarks(storedBookmarks);
+  }, []);
+
+  useEffect(() => {
     const loadLang = async () => {
       const currentLang = await languagePreferenceService.getLanguage();
       setLang(currentLang);
     };
 
-    loadSavedBookmarks();
+    // Load on mount
+    refreshBookmarks();
     loadLang();
-  }, []);
+
+    // Reload bookmarks every time this tab is focused
+    const unsubscribe = navigation.addListener('focus', () => {
+      refreshBookmarks();
+    });
+
+    return unsubscribe;
+  }, [navigation, refreshBookmarks]);
 
   const handleRemoveBookmark = async (bookmarkId: string) => {
     const updatedBookmarks = await removeBookmark(bookmarkId);

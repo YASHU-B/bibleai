@@ -59,7 +59,7 @@ export default function TabsLayout() {
         name="assistant"
         options={{
           title: 'AI Ask',
-          headerTitle: 'Bible AI',
+          headerTitle: 'AI Assistant',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} size={size} color={color} />
           ),
