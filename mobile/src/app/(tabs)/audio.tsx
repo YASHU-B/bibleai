@@ -19,10 +19,7 @@ import { books as bibleBooks, verses as bibleVerses, Book, Verse } from '@/lib/b
 
 const { width: SCREEN_W } = Dimensions.get('window');
 
-// Strip leading verse number that's embedded in Telugu text
-function cleanTe(text: string): string {
-  return text.replace(/^\s*\d+\s*/, '');
-}
+
 
 export default function AudioBible() {
   const theme = useTheme();
@@ -184,7 +181,7 @@ export default function AudioBible() {
     setCurrentVerseIndex(index);
 
     const isEn = audioLangRef.current === 'en';
-    const text = isEn ? verse.text_en : cleanTe(verse.text_te);
+    const text = isEn ? verse.text_en : verse.text_te;
     const speechLang = isEn ? 'en-US' : 'te-IN';
 
     Speech.speak(text, {
@@ -395,7 +392,7 @@ export default function AudioBible() {
             <View style={[styles.compactVersePreview, { backgroundColor: theme.accentBg, borderColor: theme.accent }]}>
               <Text style={[styles.compactVerseText, { color: theme.text }]} numberOfLines={2}>
                 <Text style={[styles.compactVerseNum, { color: theme.accent }]}>{currentVerse.chapter}:{currentVerse.verse} </Text>
-                {audioLang === 'en' ? currentVerse.text_en : cleanTe(currentVerse.text_te)}
+                {audioLang === 'en' ? currentVerse.text_en : currentVerse.text_te}
               </Text>
             </View>
           )}
@@ -582,7 +579,7 @@ export default function AudioBible() {
             >
               <Text style={[styles.verseRowNum, { color: theme.accent }]}>{v.verse}</Text>
               <Text style={[styles.verseRowText, { color: i === currentVerseIndex ? theme.text : theme.textSecondary }]} numberOfLines={2}>
-                {audioLang === 'en' ? v.text_en : cleanTe(v.text_te)}
+                {audioLang === 'en' ? v.text_en : v.text_te}
               </Text>
               {i === currentVerseIndex && isPlaying && (
                 <Ionicons name="volume-medium" size={14} color={theme.accent} />

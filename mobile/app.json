@@ -13,27 +13,28 @@
       "assets/audio/**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.bibleai.app"
     },
     "updates": {
-      "url": "https://u.expo.dev/b7f01295-3750-4e88-bb48-9d5883aefa63"
+      "url": "https://u.expo.dev/b7f01295-3750-4e88-bb48-9d5883aefa63",
+      "fallbackToCacheTimeout": 0
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "android": {
+      "versionCode": 3,
       "package": "com.bibleai.app",
       "adaptiveIcon": {
         "backgroundColor": "#090d16",
         "foregroundImage": "./assets/images/icon.png"
       },
       "permissions": [
-        "INTERNET"
-      ],
-      "runtimeVersion": {
-        "policy": "appVersion"
-      }
+        "INTERNET",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
     },
     "web": {
       "output": "static",
@@ -53,6 +54,13 @@
           "image": "./assets/images/splash-icon.png",
           "resizeMode": "contain",
           "imageWidth": 120
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#090d16"
         }
       ]
     ],

@@ -26,8 +26,7 @@ export const verseShareService = {
       const title = isTe ? '✨ *నేటి బైబిల్ వాక్యము* ✨' : '✨ *BIBLE VERSE OF THE DAY* ✨';
       const line = '━━━━━━━━━━━━━━━━━━━━';
       const bookRef = `📖 *${verseRef}*`;
-      const cleanText = data.text.replace(/^\s*\d+\s*/, '');
-      const verseText = `“ _${cleanText.trim()}_ ”`;
+      const verseText = `" _${data.text.trim()}_ "`;
       const footerTitle = isTe ? '🕊️ *ప్రార్థన & ధ్యానము:*' : '🕊️ *Reflection & Prayer:*';
       const footerText = isTe 
         ? 'ఈ దైవ వాక్యము మీ హృదయానికి శాంతిని, దేవుని కృపను మరియు ఆశీర్వాదాలను అనుగ్రహించును గాక. ఆమేన్. 🙏'
@@ -53,9 +52,8 @@ export const verseShareService = {
       const verseRef = `${data.bookName} ${data.chapter}:${data.verse}`;
       const line = '━━━━━━━━━━━━━━━━━━━━';
 
-      // Clean verse numbers from both texts
-      const cleanTe = data.text_te.replace(/^\s*\d+\s*/, '').trim();
-      const cleanEn = data.text_en.replace(/^\s*\d+\s*/, '').trim();
+      const cleanTe = data.text_te.trim();
+      const cleanEn = data.text_en.trim();
 
       const message =
         `✨ *నేటి బైబిల్ వాక్యము* ✨\n` +
@@ -89,8 +87,7 @@ export const verseShareService = {
 
       verses.forEach((v) => {
         const verseRef = `${v.bookName} ${v.chapter}:${v.verse}`;
-        const cleanText = v.text.replace(/^\s*\d+\s*/, '');
-        message += `📖 *${verseRef}*\n“ _${cleanText.trim()}_ ”\n\n`;
+        message += `📖 *${verseRef}*\n" _${v.text.trim()}_ "\n\n`;
       });
 
       const footerTitle = isTe ? '🕊️ *ప్రార్థన & ధ్యానము:*' : '🕊️ *Reflection & Prayer:*';
@@ -120,8 +117,7 @@ export const verseShareService = {
     const title = isTe ? '✨ *నేటి బైబిల్ వాక్యము* ✨' : '✨ *BIBLE VERSE OF THE DAY* ✨';
     const line = '━━━━━━━━━━━━━━━━━━━━';
     const bookRef = `📖 *${verseRef}*`;
-    const cleanText = data.text.replace(/^\s*\d+\s*/, '');
-    const verseText = `“ _${cleanText.trim()}_ ”`;
+    const verseText = `" _${data.text.trim()}_ "`;
     const footerTitle = isTe ? '🕊️ *ప్రార్థన & ధ్యానము:*' : '🕊️ *Reflection & Prayer:*';
     const footerText = isTe 
       ? 'ఈ దైవ వాక్యము మీ హృదయానికి శాంతిని, దేవుని కృపను మరియు ఆశీర్వాదాలను అనుగ్రహించును గాక. ఆమేన్. 🙏'

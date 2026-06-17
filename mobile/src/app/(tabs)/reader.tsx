@@ -27,11 +27,7 @@ import { useBibleInitStatus } from '@/hooks/useBibleInitStatus';
 
 const { height } = Dimensions.get('window');
 
-// Strip a leading verse number (e.g. "1 " or "12 ") from Telugu text
-// because the CSV already embeds the number at the start of the string.
-function cleanTeluguText(text: string): string {
-  return text.replace(/^\s*\d+\s*/, '');
-}
+
 
 function SearchBar({ value, onChangeText, theme }: { value: string; onChangeText: (t: string) => void; theme: ReturnType<typeof useTheme> }) {
   const [focused, setFocused] = React.useState(false);
@@ -234,7 +230,7 @@ export default function MobileReader() {
   const handlePlayTts = async (v: Verse, lang: 'te' | 'en') => {
     try {
       await Speech.stop();
-      const text = lang === 'te' ? cleanTeluguText(v.text_te) : (v.text_en?.trim() ? v.text_en : cleanTeluguText(v.text_te));
+      const text = lang === 'te' ? v.text_te : (v.text_en?.trim() ? v.text_en : v.text_te);
       await Speech.speak(text, {
         language: lang === 'te' ? 'te-IN' : 'en-US',
         voice: lang === 'en' ? englishVoice ?? undefined : undefined,
@@ -477,7 +473,7 @@ export default function MobileReader() {
                 {(viewMode === 'both' || viewMode === 'te') && (
                   <View style={styles.langColumn}>
                     <Text style={[styles.verseNumberTe, { color: theme.accentSecondary }]}>{searchQuery.trim() ? `${v.chapter}:${v.verse}` : `${v.verse}`}</Text>
-                    <Text style={[styles.verseTextTe, { fontSize: fontSize, color: theme.text, lineHeight: fontSize * 1.8 }]}>{cleanTeluguText(v.text_te)}</Text>
+                    <Text style={[styles.verseTextTe, { fontSize: fontSize, color: theme.text, lineHeight: fontSize * 1.8 }]}>{v.text_te}</Text>
                   </View>
                 )}
 
